@@ -6,12 +6,47 @@ const PORT = 3000;
 // It's roughly equivalent to the result of calling `http.createServer()`
 const app = express();
 
+
+// These 4 lines set up your ES6 templates
+const es6Renderer = require('express-es6-template-engine');
+app.engine('html', es6Renderer);  // Set up es6Renderer as our template engine
+                                  // identified by the label "html"
+
+app.set('views', './views');      // Express should look for the view 
+                                  // files in the "./views" directory
+
+app.set('view engine', 'html');   // Tie it all together. 
+
+
+// const homepage = require('./views/homepage');
+
+
 // Respond to GET requests for the path "/"
 app.get('/', (req, res) => {
-    // Note: this is different from the plain `res.end`
-    console.log('Sending the home page');
-    res.send('Home page');
+    // pretend we got a user from the database.
+    const theUser = {
+        username: 'turnipsquirrel'
+    };
+    const bookTitles = [
+        'The Shining',
+        'It',
+        'Pet Sematary'
+    ];
+    res.render('index', {
+        locals: {
+            title: `Hello ${theUser.username}`,
+            message: `Welcome back`,
+            content: `lorem ipsum something something`,
+            books: bookTitles
+        }
+    });
 });
+
+app.get('/about', (req, res) => {
+    res.render('about');
+})
+
+
 
 app.post('/', (req, res) => {
     console.log('Responding to a POST');

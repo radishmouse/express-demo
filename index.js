@@ -2,6 +2,8 @@
 const express = require('express');
 const PORT = 3000;
 
+const axios = require('axios');
+
 // Create an express app.
 // It's roughly equivalent to the result of calling `http.createServer()`
 const app = express();
@@ -58,7 +60,19 @@ function loginPage(req, res) {
 app.get('/login', log, loginPage);
 
 
+app.get('/jokes', async (req, res) => {
+    const JOKE_URL = 'http://yerkee.com/api/fortune';
+    // let's call the jokes api with axios
+    const jokeResponse = await axios.get(JOKE_URL);
+    console.log(jokeResponse);
 
+    // axios puts the data you want in a .data property
+    const theActualJoke = jokeResponse.data;
+
+    // and then return that in a response :)
+    res.json(theActualJoke);
+
+})
 
 app.post('/', (req, res) => {
     console.log('Responding to a POST');
